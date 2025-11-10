@@ -1,0 +1,38 @@
+name: microservicio-1
+
+# Kubernetes namespace to install into (can be overridden)
+namespace: pluaj-dev-dev
+
+replicaCount: 1
+
+labels:
+  app: mi-app-s1
+
+container:
+  image: "juangrp/shadcn-datatable-practica"
+  tag: "{{ tag }}"
+  port: 3000
+
+service:
+  type: ClusterIP
+  port: 3000
+
+resources:
+  requests:
+    cpu: "500m"
+    memory: "800Mi"
+  limits:
+    cpu: "1000m"
+    memory: "1500Mi"
+
+hpa:
+  minReplicas: 1
+  maxReplicas: 5
+  targetCPUUtilizationPercentage: 75
+
+configmap:
+  database: "192.168.1.1"
+
+secret:
+  # plain text password; template will base64-encode when placing into `data:`
+  password: "hola"

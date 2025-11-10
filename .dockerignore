@@ -1,0 +1,14 @@
+node_modules
+npm-debug.log
+yarn-error.log
+.git
+.gitignore
+.env
+.env.*
+*.log
+*.tmp
+*.swp
+.next/cache
+coverage
+.vscode
+.idea
