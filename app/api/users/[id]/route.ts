@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server"
 
-const MICROSERVICE_URL =
-  process.env.MICROSERVICE_URL || "http://service-microservicio-2.pluaj-dev-dev.svc.cluster.local:8082"
+const NEXT_PUBLIC_API_URL =
+  process.env.NEXT_PUBLIC_API_URL || "http://service-microservicio-2.pluaj-dev-dev.svc.cluster.local:8082"
 
 // PUT - Actualizar un usuario
 export async function PUT(request: Request, { params }: { params: Promise<{ id: string }> }) {
@@ -9,8 +9,8 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
     const body = await request.json()
     const { id } = await params
     console.log("Updating user with ID:", id)
-    console.log("MICROSERVICE_URL:", MICROSERVICE_URL)
-    const response = await fetch(`${MICROSERVICE_URL}/usuarios/${id}`, {
+    console.log("NEXT_PUBLIC_API_URL:", NEXT_PUBLIC_API_URL)
+    const response = await fetch(`${NEXT_PUBLIC_API_URL}/usuarios/${id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -38,7 +38,7 @@ export async function DELETE(request: Request, { params }: { params: Promise<{ i
   try {
     const { id } = await params
 
-    const response = await fetch(`${MICROSERVICE_URL}/usuarios/${id}`, {
+    const response = await fetch(`${NEXT_PUBLIC_API_URL}/usuarios/${id}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",

@@ -1,21 +1,11 @@
-name: microservicio-1
+name: openshift-frontend
+# Namespace donde se desplegarán los recursos
+namespace: "pluaj-dev-dev"
 
-# Kubernetes namespace to install into (can be overridden)
-namespace: pluaj-dev-dev
-
-replicaCount: 1
-
-labels:
-  app: mi-app-s1
-
-container:
-  image: "juangrp/shadcn-datatable-practica"
+replicas: 1
+image:
+  repository: "juangrp/openshift-backend"
   tag: "{{ tag }}"
-  port: 3000
-
-service:
-  type: ClusterIP
-  port: 3000
 
 resources:
   requests:
@@ -25,14 +15,53 @@ resources:
     cpu: "1000m"
     memory: "1500Mi"
 
+# configuracion service 
+service:
+  type: ClusterIP   # Tipo de servicio (ClusterIP, NodePort, LoadBalancer)
+  port: 3000        # Puerto del servicio
+
+#configuracion env 
+appType: frontend # o frontend
+env:
+  frontend:
+    NEXT_PUBLIC_API_URL: "http://openshift-backend-service.pluaj-dev-dev.svc.cluster.local:9082"
+
+
+# Configuración de HPA
 hpa:
-  minReplicas: 1
-  maxReplicas: 5
-  targetCPUUtilizationPercentage: 75
-
+    enabled: true
+    minReplicas: 1
+    maxReplicas: 3
+    cpuUtilization: 80
+# configuracion de configmap 
 configmap:
-  database: "192.168.1.1"
-
+  enabled: true
+  data:
+    APP_ENV: "production"
+# configuracion de secret 
 secret:
-  # plain text password; template will base64-encode when placing into `data:`
-  password: "hola"
+  enabled: true
+  username: admin
+  password: superseguro
+
+#configuracion de route
+route:
+  enabled: true
+
+#configuracion pvc 
+pvc:
+  enabled: false
+  size: 1Gi
+  storageClass: gp3
+
+#configuracion network
+networkPolicy:
+  enabled: false  # Habilitar/deshabilitar la creación de la NetworkPolicy
+  name: allow-to-backend-ingress  # Nombre de la política
+  podSelector:
+    app: backend-openshift  # Selector de pods destino - Aplica esta política a los pods etiquetados como micro-b
+  fromSelector:
+    app: frontend-openshift  # Selector de pods origen
+  port: 9082  #  Puerto de destino en micro-b (ajústalo según tu app) 
+  protocol: TCP  # Protocolo permitido
+

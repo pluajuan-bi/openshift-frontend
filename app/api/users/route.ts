@@ -1,13 +1,13 @@
 import { NextResponse } from "next/server"
 
 // URL del microservicio interno (solo accesible desde el servidor)
-const MICROSERVICE_URL =
-  process.env.MICROSERVICE_URL || "http://service-microservicio-2.pluaj-dev-dev.svc.cluster.local:8082"
+const NEXT_PUBLIC_API_URL =
+  process.env.NEXT_PUBLIC_API_URL || "http://service-microservicio-2.pluaj-dev-dev.svc.cluster.local:8082"
 
 // GET - Obtener todos los usuarios
 export async function GET() {
   try {
-    const response = await fetch(`${MICROSERVICE_URL}/`, {
+    const response = await fetch(`${NEXT_PUBLIC_API_URL}/`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -35,7 +35,7 @@ export async function POST(request: Request) {
   try {
     const body = await request.json()
 
-    const response = await fetch(`${MICROSERVICE_URL}/usuarios`, {
+    const response = await fetch(`${NEXT_PUBLIC_API_URL}/usuarios`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
